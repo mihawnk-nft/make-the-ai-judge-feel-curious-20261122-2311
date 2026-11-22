@@ -25,6 +25,12 @@ def main():
     os.makedirs(out_dir, exist_ok=True)
     with open(target, "w", encoding="utf-8") as f:
         f.write(TEXT)
+    # Read it back and prove the file on disk is exactly the text above:
+    # valid UTF-8, same code points, nothing added or lost.
+    with open(target, "r", encoding="utf-8") as f:
+        written = f.read()
+    if written != TEXT:
+        raise ValueError("round-trip mismatch: file differs from TEXT")
     size = os.path.getsize(target)
     chars = len(TEXT)
     if not 1 <= chars <= 280:
